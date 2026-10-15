@@ -57,6 +57,8 @@ header{margin-top:7px;padding:0 12px}
 .modal{background:linear-gradient(130deg,#1c496fe8,#0c1e3cfa);border:1px solid #84c5eab8;backdrop-filter:blur(16px)}
 .utility-bar{flex-wrap:wrap;gap:8px}.give-up-btn{padding:7px 13px;border-radius:30px;border:1px solid #e0b2b080;background:#411e3559;color:#ffced3;font-size:13px;font-weight:750;box-shadow:inset 0 1px #fff2}.give-up-btn:disabled{opacity:.35;cursor:default}@media(max-width:360px){.give-up-btn{padding:6px 9px}.utility-bar{gap:6px}.hint-btn{min-width:0}} 
 /* Win celebration: scoped visuals only, never changes gameplay tile state */
+.tile.win-reduced-glow{background:linear-gradient(135deg,#33cfc1,#387ee1,#a276e4)!important;border-color:#befaff!important;box-shadow:0 0 19px #56d4ffb0!important}
+
 .win-meteors{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:24}
 .win-meteor{position:absolute;top:-12%;left:var(--meteor-x);width:var(--meteor-length);height:2px;border-radius:99px;opacity:0;transform:rotate(25deg);transform-origin:right center;background:linear-gradient(90deg,transparent,var(--meteor-color) 72%,#e5ffff);filter:drop-shadow(0 0 4px var(--meteor-color));animation:meteor-fall 950ms ease-out var(--meteor-delay) both}
 @keyframes meteor-fall{0%{opacity:0;translate:0 0}16%{opacity:.78}70%{opacity:.7}100%{opacity:0;translate:45vw 98vh}}
@@ -115,7 +117,7 @@ let winCelebrationToken=0;
 function clearWinCelebration(){winCelebrationToken++;document.querySelector('.win-meteors')?.remove();$('grid')?.classList.remove('win-row-shimmer')}
 function celebrateWin(){
  clearWinCelebration();
- if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return 250;
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){const grid=$('grid'),tiles=[...grid.querySelectorAll('.tile')].slice((state.guesses.length-1)*wordLength,state.guesses.length*wordLength);tiles.forEach(tile=>tile.classList.add('win-reduced-glow'));const token=winCelebrationToken;setTimeout(()=>{if(token===winCelebrationToken)tiles.forEach(tile=>tile.classList.remove('win-reduced-glow'))},1350);return 1500;}
  const token=winCelebrationToken,grid=$('grid'),tiles=[...grid.querySelectorAll('.tile')].slice((state.guesses.length-1)*wordLength,state.guesses.length*wordLength);
  if(tiles.length!==wordLength)return 0;
  grid.classList.add('win-row-shimmer');
